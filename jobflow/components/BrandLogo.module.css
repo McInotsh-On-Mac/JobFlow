@@ -1,0 +1,24 @@
+.link,
+.standalone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.link {
+  text-decoration: none;
+}
+
+.logo {
+  height: auto;
+  width: auto;
+  max-width: 100%;
+}
+
+.small {
+  max-height: 40px;
+}
+
+.large {
+  max-height: 86px;
+}

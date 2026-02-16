@@ -1,0 +1,87 @@
+.page {
+  min-height: 100dvh;
+  padding: clamp(1rem, 2.4vw, 2.2rem);
+  background:
+    radial-gradient(circle at 14% 16%, rgba(10, 86, 214, 0.14), transparent 34%),
+    radial-gradient(circle at 86% 12%, rgba(38, 212, 222, 0.14), transparent 34%),
+    linear-gradient(140deg, #f4f7fc 0%, #eef4fb 45%, #f8fafd 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.halo {
+  position: absolute;
+  width: min(34rem, 56vw);
+  aspect-ratio: 1;
+  right: 4%;
+  top: 20%;
+  transform: translate(50%, -50%);
+  background: radial-gradient(circle, rgba(17, 108, 240, 0.14) 0%, rgba(17, 108, 240, 0) 74%);
+  pointer-events: none;
+}
+
+.shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1040px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.emptyState {
+  border-radius: 1.4rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  padding: clamp(1rem, 2.6vw, 2.2rem);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 0.8rem;
+}
+
+.emptyState h1 {
+  margin: 0;
+  font-size: clamp(1.7rem, 4.2vw, 2.8rem);
+  line-height: 1.02;
+}
+
+.emptyState p {
+  margin: 0;
+  color: #41526c;
+  line-height: 1.45;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.2rem;
+}
+
+.button {
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 0.62rem 0.96rem;
+}
+
+.primary {
+  background: #0f172a;
+  color: #f8fbff;
+  border-color: #0f172a;
+}
+
+@media (max-width: 760px) {
+  .actions {
+    width: 100%;
+  }
+
+  .button {
+    flex: 1;
+    text-align: center;
+  }
+}
