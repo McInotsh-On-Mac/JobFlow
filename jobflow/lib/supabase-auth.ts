@@ -4,6 +4,8 @@ type SupabaseAuthPayload = {
   access_token?: string;
   refresh_token?: string;
   expires_in?: number;
+  error_description?: string;
+  code?: string;
   session?: {
     access_token?: string;
     refresh_token?: string;
@@ -23,14 +25,25 @@ export type SupabaseSession = {
   expiresIn: number;
 };
 
-function buildHeaders(accessToken?: string): HeadersInit {
-  const { anonKey } = getSupabaseEnv();
+type AuthResult = {
+  error: string | null;
+  session: SupabaseSession | null;
+};
 
-  return {
+function buildHeaders(accessToken?: string, includeAnonAuthorization = false): HeadersInit {
+  const { anonKey } = getSupabaseEnv();
+  const headers: Record<string, string> = {
     apikey: anonKey,
-    Authorization: accessToken ? `Bearer ${accessToken}` : `Bearer ${anonKey}`,
     "Content-Type": "application/json",
   };
+
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  } else if (includeAnonAuthorization) {
+    headers.Authorization = `Bearer ${anonKey}`;
+  }
+
+  return headers;
 }
 
 function getSupabaseAuthBaseUrl(): string {
@@ -63,59 +76,78 @@ function readSession(payload: SupabaseAuthPayload): SupabaseSession | null {
 }
 
 function readError(payload: SupabaseAuthPayload, fallback: string): string {
-  return payload.error ?? payload.msg ?? fallback;
+  return payload.error_description ?? payload.error ?? payload.msg ?? payload.code ?? fallback;
+}
+
+async function postAuthJson(
+  path: string,
+  body: Record<string, string | object>,
+  includeAnonAuthorization = false,
+) {
+  return fetch(`${getSupabaseAuthBaseUrl()}${path}`, {
+    method: "POST",
+    headers: buildHeaders(undefined, includeAnonAuthorization),
+    body: JSON.stringify(body),
+  });
+}
+
+async function resolveAuthResult(response: Response, fallbackError: string): Promise<AuthResult> {
+  const payload = await parsePayload(response);
+
+  if (!response.ok) {
+    return { error: readError(payload, fallbackError), session: null };
+  }
+
+  const session = readSession(payload);
+
+  if (!session) {
+    return { error: null, session: null };
+  }
+
+  return { error: null, session };
 }
 
 export async function signInWithPassword(email: string, password: string) {
-  const response = await fetch(`${getSupabaseAuthBaseUrl()}/token?grant_type=password`, {
-    method: "POST",
-    headers: buildHeaders(),
-    body: JSON.stringify({ email, password }),
-  });
+  const path = "/token?grant_type=password";
+  const body = { email, password };
+  const first = await postAuthJson(path, body, false);
 
-  const payload = await parsePayload(response);
-
-  if (!response.ok) {
-    return { error: readError(payload, "Unable to sign in."), session: null };
+  if ((first.status === 401 || first.status === 403) && first.ok === false) {
+    const second = await postAuthJson(path, body, true);
+    return resolveAuthResult(second, "Unable to sign in.");
   }
 
-  return { error: null, session: readSession(payload) };
+  return resolveAuthResult(first, "Unable to sign in.");
 }
 
 export async function signUpWithPassword(name: string, email: string, password: string) {
-  const response = await fetch(`${getSupabaseAuthBaseUrl()}/signup`, {
-    method: "POST",
-    headers: buildHeaders(),
-    body: JSON.stringify({
-      email,
-      password,
-      data: { full_name: name },
-    }),
-  });
+  const path = "/signup";
+  const body = {
+    email,
+    password,
+    data: { full_name: name },
+  };
+  const first = await postAuthJson(path, body, false);
 
-  const payload = await parsePayload(response);
-
-  if (!response.ok) {
-    return { error: readError(payload, "Unable to sign up."), session: null };
+  if ((first.status === 401 || first.status === 403) && first.ok === false) {
+    const second = await postAuthJson(path, body, true);
+    return resolveAuthResult(second, "Unable to sign up.");
   }
 
-  return { error: null, session: readSession(payload) };
+  return resolveAuthResult(first, "Unable to sign up.");
 }
 
 export async function refreshWithToken(refreshToken: string) {
-  const response = await fetch(`${getSupabaseAuthBaseUrl()}/token?grant_type=refresh_token`, {
-    method: "POST",
-    headers: buildHeaders(),
-    body: JSON.stringify({ refresh_token: refreshToken }),
-  });
+  const path = "/token?grant_type=refresh_token";
+  const body = { refresh_token: refreshToken };
+  const first = await postAuthJson(path, body, false);
 
-  const payload = await parsePayload(response);
-
-  if (!response.ok) {
-    return { error: readError(payload, "Unable to refresh session."), session: null };
+  if ((first.status === 401 || first.status === 403) && first.ok === false) {
+    const second = await postAuthJson(path, body, true);
+    return resolveAuthResult(second, "Unable to refresh session.");
   }
 
-  return { error: null, session: readSession(payload) };
+  return resolveAuthResult(first, "Unable to refresh session.");
 }
 
 export async function fetchSupabaseUser(accessToken: string) {

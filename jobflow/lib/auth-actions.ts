@@ -14,6 +14,15 @@ import {
   type SupabaseSession,
 } from "./supabase-auth";
 
+function redirectWithReason(path: string, error: string, reason?: string): never {
+  const params = new URLSearchParams({ error });
+  if (reason) {
+    params.set("reason", reason.slice(0, 180));
+  }
+
+  return redirect(`${path}?${params.toString()}`);
+}
+
 async function setSessionCookies(session: SupabaseSession) {
   const cookieStore = await cookies();
 
@@ -43,17 +52,29 @@ export async function login(formData: FormData) {
   const password = String(formData.get("password") ?? "").trim();
 
   if (!email || !password) {
-    redirect("/login?error=missing");
+    redirectWithReason("/login", "missing");
   }
 
-  const { error, session } = await signInWithPassword(email, password);
+  let error: string | null = null;
+  let session: SupabaseSession | null = null;
+
+  try {
+    const result = await signInWithPassword(email, password);
+    error = result.error;
+    session = result.session;
+  } catch {
+    redirectWithReason("/login", "network");
+  }
 
   if (error || !session) {
-    redirect("/login?error=invalid");
+    if (error?.toLowerCase().includes("confirm")) {
+      redirectWithReason("/login", "confirm_email", error);
+    }
+    redirectWithReason("/login", "invalid", error ?? "No session returned from auth.");
   }
 
   await setSessionCookies(session);
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function signup(formData: FormData) {
@@ -62,13 +83,29 @@ export async function signup(formData: FormData) {
   const password = String(formData.get("password") ?? "").trim();
 
   if (!name || !email || !password) {
-    redirect("/signup?error=missing");
+    redirectWithReason("/signup", "missing");
   }
 
-  const { error, session } = await signUpWithPassword(name, email, password);
+  let error: string | null = null;
+  let session: SupabaseSession | null = null;
+
+  try {
+    const result = await signUpWithPassword(name, email, password);
+    error = result.error;
+    session = result.session;
+  } catch {
+    redirectWithReason("/signup", "network");
+  }
 
   if (error) {
-    redirect("/signup?error=invalid");
+    const normalized = error.toLowerCase();
+    if (normalized.includes("email rate limit exceeded")) {
+      redirectWithReason("/signup", "rate_limit", error);
+    }
+    if (normalized.includes("already") || normalized.includes("registered")) {
+      redirectWithReason("/signup", "exists", error);
+    }
+    redirectWithReason("/signup", "invalid", error);
   }
 
   if (!session) {
@@ -76,7 +113,7 @@ export async function signup(formData: FormData) {
   }
 
   await setSessionCookies(session);
-  redirect("/");
+  redirect("/dashboard");
 }
 
 export async function logout() {

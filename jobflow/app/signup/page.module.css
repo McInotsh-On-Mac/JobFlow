@@ -88,6 +88,45 @@
   align-content: center;
 }
 
+.authTabs {
+  display: inline-flex;
+  gap: 0.36rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  padding: 0.24rem;
+  background: rgba(255, 255, 255, 0.86);
+  justify-self: start;
+  margin-bottom: 0.2rem;
+}
+
+.authTab {
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  color: #364963;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.36rem 0.62rem;
+  background: #ffffff;
+}
+
+.authTabActive {
+  color: #f8fbff;
+  background: #0f172a;
+  border-color: #0f172a;
+}
+
+.feedbackError {
+  margin: 0 0 0.12rem;
+  border-radius: 0.65rem;
+  padding: 0.5rem 0.62rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  border: 1px solid rgba(184, 28, 28, 0.24);
+  color: #7f1d1d;
+  background: rgba(254, 226, 226, 0.75);
+}
+
 .form label {
   font-size: 0.82rem;
   font-weight: 700;

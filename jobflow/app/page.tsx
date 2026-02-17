@@ -12,17 +12,23 @@ export default function Home() {
         <AppHeader current="home" />
 
         <section className={styles.hero}>
-          <BrandLogo size="large" href={null} priority />
-          <h1>Job tracking, simplified.</h1>
-          <p>No fake stats. No fake applications. Just your account and your workflow.</p>
-          <div className={styles.actions}>
-            <Link className={`${styles.button} ${styles.primary}`} href="/dashboard">
-              Dashboard
-            </Link>
-            <Link className={styles.button} href="/applications">
-              Applications
-            </Link>
+          <div className={styles.heroTop}>
+            <BrandLogo size="large" href={null} priority />
+            <div className={styles.quickAccess}>
+              <p>Quick Access</p>
+              <div className={styles.actions}>
+                <Link className={`${styles.button} ${styles.primary}`} href="/dashboard">
+                  Dashboard
+                </Link>
+                <Link className={styles.button} href="/applications">
+                  Applications
+                </Link>
+              </div>
+            </div>
           </div>
+
+          <h1>Job tracking, simplified.</h1>
+          <p>Stay organized, follow up on time, and move through your job search with confidence.</p>
         </section>
       </div>
     </main>

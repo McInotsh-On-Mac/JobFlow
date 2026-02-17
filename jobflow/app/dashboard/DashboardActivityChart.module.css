@@ -1,0 +1,79 @@
+.chart {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  padding: 0.24rem;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.tab {
+  border: 0;
+  background: transparent;
+  color: #41526c;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.35rem 0.62rem;
+  cursor: pointer;
+}
+
+.active {
+  background: #0f172a;
+  color: #f8fbff;
+}
+
+.grid {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(2.6rem, 1fr);
+  gap: 0.45rem;
+  overflow-x: auto;
+  padding-bottom: 0.2rem;
+}
+
+.item {
+  display: grid;
+  gap: 0.34rem;
+  justify-items: center;
+  min-width: 2.6rem;
+}
+
+.value {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #51617a;
+}
+
+.track {
+  width: 100%;
+  height: 7.5rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.fill {
+  width: 100%;
+  background: linear-gradient(180deg, #1ba0f0 0%, #0a56d6 100%);
+  border-radius: 999px;
+  min-height: 3px;
+}
+
+.label {
+  margin: 0;
+  color: #5e6d84;
+  font-size: 0.7rem;
+  text-align: center;
+  white-space: nowrap;
+}

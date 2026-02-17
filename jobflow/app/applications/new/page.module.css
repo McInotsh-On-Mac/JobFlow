@@ -1,0 +1,134 @@
+.page {
+  min-height: 100dvh;
+  padding: clamp(1rem, 2.4vw, 2.2rem);
+  background:
+    radial-gradient(circle at 16% 18%, rgba(10, 86, 214, 0.14), transparent 34%),
+    radial-gradient(circle at 88% 14%, rgba(38, 212, 222, 0.14), transparent 34%),
+    linear-gradient(140deg, #f4f7fc 0%, #eef4fb 45%, #f8fafd 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.halo {
+  position: absolute;
+  width: min(38rem, 62vw);
+  aspect-ratio: 1;
+  right: 8%;
+  top: 22%;
+  transform: translate(50%, -50%);
+  background: radial-gradient(circle, rgba(17, 108, 240, 0.14), rgba(17, 108, 240, 0) 74%);
+  pointer-events: none;
+}
+
+.shell {
+  position: relative;
+  z-index: 1;
+  max-width: 1040px;
+  margin: 0 auto;
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  border-radius: 1.4rem;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  padding: clamp(1rem, 2.4vw, 2rem);
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+  display: grid;
+  gap: 1rem;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  line-height: 1.02;
+}
+
+.header p {
+  margin: 0.55rem 0 0;
+  color: #3b4b63;
+}
+
+.form {
+  display: grid;
+  gap: 0.62rem;
+}
+
+.feedbackError {
+  margin: 0 0 0.12rem;
+  border-radius: 0.65rem;
+  padding: 0.5rem 0.62rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  border: 1px solid rgba(184, 28, 28, 0.24);
+  color: #7f1d1d;
+  background: rgba(254, 226, 226, 0.75);
+}
+
+.form label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #213249;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  border-radius: 0.85rem;
+  background: #ffffff;
+  color: #0f172a;
+  padding: 0.72rem 0.78rem;
+  font: inherit;
+}
+
+.form textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+  outline: 2px solid rgba(23, 114, 216, 0.28);
+  outline-offset: 1px;
+}
+
+.actions {
+  margin-top: 0.38rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.56rem;
+}
+
+.button {
+  text-decoration: none;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 0.9rem;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 0.72rem 0.88rem;
+  cursor: pointer;
+}
+
+.primary {
+  border: none;
+  background: linear-gradient(90deg, #0a56d6 0%, #1e8dee 55%, #20c5d8 100%);
+  color: #f8fbff;
+}
+
+@media (max-width: 760px) {
+  .actions {
+    width: 100%;
+  }
+
+  .button {
+    flex: 1;
+    text-align: center;
+  }
+}

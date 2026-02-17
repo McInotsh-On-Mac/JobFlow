@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## JobFlow
 
-## Getting Started
+JobFlow is a Next.js + Supabase app for tracking job applications.
 
-First, run the development server:
+## Run Locally
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Configure environment variables in `jobflow/.env.local`:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+3. Run the app:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Supabase Schema
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Run the SQL migrations in Supabase SQL Editor in this order:
 
-## Learn More
+1. `supabase/migrations/20260216_0001_mvp_schema.sql`
+2. `supabase/migrations/20260216_0002_optional_extensions.sql` (optional add-ons)
 
-To learn more about Next.js, take a look at the following resources:
+The MVP migration creates:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `profiles`
+- `companies`
+- `applications`
+- `follow_ups`
+- `notes`
+- `links`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+and includes:
 
-## Deploy on Vercel
+- owner-safe foreign keys
+- indexes for common queries
+- RLS policies scoped to `auth.uid()`
+- automatic profile creation trigger on `auth.users` insert
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Auth Flow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The app uses Supabase Auth (email/password):
+
+- Public routes: `/login`, `/signup`
+- Protected routes: `/`, `/dashboard`, `/applications`
+- Session cookies are set server-side after login/signup
+- Logout is available from the profile dropdown in the header
+
+## Validate
+
+```bash
+npm run lint
+npm run build -- --webpack
+```
