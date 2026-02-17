@@ -4,11 +4,10 @@ import BrandLogo from "./BrandLogo";
 import styles from "./AppHeader.module.css";
 
 type AppHeaderProps = {
-  current: "home" | "dashboard" | "applications";
+  current: "dashboard" | "applications";
 };
 
 const links = [
-  { key: "home", href: "/", label: "Home" },
   { key: "dashboard", href: "/dashboard", label: "Dashboard" },
   { key: "applications", href: "/applications", label: "Applications" },
 ] as const;

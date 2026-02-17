@@ -6,7 +6,7 @@ import {
 } from "./lib/auth";
 import { fetchSupabaseUser, refreshWithToken, type SupabaseSession } from "./lib/supabase-auth";
 
-const AUTH_ROUTES = new Set(["/login", "/signup"]);
+const PUBLIC_ROUTES = new Set(["/login", "/signup", "/forgot-password", "/reset-password"]);
 const PUBLIC_FILE = /\.[^/]+$/;
 
 function setProxySessionCookies(response: NextResponse, session: SupabaseSession) {
@@ -36,7 +36,7 @@ function clearProxySessionCookies(response: NextResponse) {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const isAuthRoute = AUTH_ROUTES.has(pathname);
+  const isPublicRoute = PUBLIC_ROUTES.has(pathname);
 
   if (pathname.startsWith("/_next") || pathname.startsWith("/api") || PUBLIC_FILE.test(pathname)) {
     return NextResponse.next();
@@ -65,14 +65,14 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  if (!isAuthenticated && !isAuthRoute) {
+  if (!isAuthenticated && !isPublicRoute) {
     const redirectResponse = NextResponse.redirect(new URL("/login", request.url));
     clearProxySessionCookies(redirectResponse);
     return redirectResponse;
   }
 
-  if (isAuthenticated && isAuthRoute) {
-    return NextResponse.redirect(new URL("/", request.url));
+  if (pathname === "/login") {
+    clearProxySessionCookies(response);
   }
 
   return response;

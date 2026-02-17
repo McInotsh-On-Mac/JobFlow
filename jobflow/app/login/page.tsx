@@ -1,6 +1,7 @@
 import Link from "next/link";
 import BrandLogo from "../../components/BrandLogo";
 import { login } from "../../lib/auth-actions";
+import RecoveryRedirect from "./RecoveryRedirect";
 import styles from "./page.module.css";
 
 type LoginPageProps = {
@@ -30,6 +31,10 @@ function getFeedback(params: { error?: string; message?: string; reason?: string
     return { type: "info", text: "Account created. Check your email to confirm your account." };
   }
 
+  if (params.message === "password-reset") {
+    return { type: "info", text: "Password updated. Sign in with your new password." };
+  }
+
   return null;
 }
 
@@ -39,14 +44,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
   return (
     <main className={styles.page}>
+      <RecoveryRedirect />
       <div className={styles.halo} aria-hidden />
 
       <div className={styles.shell}>
         <header className={styles.topBar}>
           <BrandLogo />
-          <Link className={styles.back} href="/signup">
-            Sign up
-          </Link>
         </header>
 
         <section className={styles.card}>
@@ -57,15 +60,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           </div>
 
           <form className={styles.form} action={login}>
-            <div className={styles.authTabs} role="tablist" aria-label="Authentication mode">
-              <Link href="/login" className={`${styles.authTab} ${styles.authTabActive}`}>
-                Sign in
-              </Link>
-              <Link href="/signup" className={styles.authTab}>
-                Sign up
-              </Link>
-            </div>
-
             {feedback ? (
               <p className={feedback.type === "error" ? styles.feedbackError : styles.feedbackInfo}>{feedback.text}</p>
             ) : null}
@@ -85,16 +79,13 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 
             <button type="submit">Sign in</button>
 
-            <a className={styles.forgotLink} href="#!" aria-disabled>
+            <Link className={styles.forgotLink} href="/forgot-password">
               Forgot password?
-            </a>
+            </Link>
 
-            <p className={styles.switchText}>
-              Need an account?{" "}
-              <Link href="/signup" className={styles.switchLink}>
-                Create one
-              </Link>
-            </p>
+            <Link href="/signup" className={styles.doorLink}>
+              New here? Create your account
+            </Link>
           </form>
         </section>
       </div>

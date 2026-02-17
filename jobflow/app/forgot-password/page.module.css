@@ -131,15 +131,6 @@
   cursor: pointer;
 }
 
-.forgotLink {
-  margin-top: -0.06rem;
-  justify-self: start;
-  font-size: 0.79rem;
-  font-weight: 700;
-  color: #0b5de0;
-  text-decoration: none;
-}
-
 .doorLink {
   margin-top: 0.3rem;
   text-decoration: none;
@@ -151,7 +142,6 @@
   font-size: 0.84rem;
   font-weight: 700;
   padding: 0.74rem 0.86rem;
-  text-decoration: none;
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
 

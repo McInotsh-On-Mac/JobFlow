@@ -77,25 +77,15 @@
   align-content: center;
 }
 
-.feedbackError,
-.feedbackInfo {
+.feedbackError {
   margin: 0 0 0.12rem;
   border-radius: 0.65rem;
   padding: 0.5rem 0.62rem;
   font-size: 0.8rem;
   line-height: 1.35;
-}
-
-.feedbackError {
   border: 1px solid rgba(184, 28, 28, 0.24);
   color: #7f1d1d;
   background: rgba(254, 226, 226, 0.75);
-}
-
-.feedbackInfo {
-  border: 1px solid rgba(3, 105, 161, 0.24);
-  color: #0c4a6e;
-  background: rgba(224, 242, 254, 0.75);
 }
 
 .form label {
@@ -131,13 +121,9 @@
   cursor: pointer;
 }
 
-.forgotLink {
-  margin-top: -0.06rem;
-  justify-self: start;
-  font-size: 0.79rem;
-  font-weight: 700;
-  color: #0b5de0;
-  text-decoration: none;
+.form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
 }
 
 .doorLink {
@@ -151,13 +137,20 @@
   font-size: 0.84rem;
   font-weight: 700;
   padding: 0.74rem 0.86rem;
-  text-decoration: none;
   transition: transform 120ms ease, box-shadow 120ms ease;
 }
 
 .doorLink:hover {
   transform: translateY(-1px);
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.helperLink {
+  justify-self: center;
+  text-decoration: none;
+  color: #0b5de0;
+  font-size: 0.84rem;
+  font-weight: 700;
 }
 
 @media (max-width: 840px) {

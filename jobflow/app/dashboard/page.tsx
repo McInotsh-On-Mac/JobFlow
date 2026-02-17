@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import AppHeader from "../../components/AppHeader";
+import BrandLogo from "../../components/BrandLogo";
 import { ACCESS_TOKEN_COOKIE_NAME } from "../../lib/auth";
 import { markFollowUpDone, setFollowUp } from "../../lib/application-actions";
 import { fetchApplicationsPageData, type ApplicationDetailRecord, type ApplicationRecord } from "../../lib/supabase-data";
@@ -401,16 +402,14 @@ export default async function DashboardPage() {
 
         <section className={styles.headerCard}>
           <div className={styles.headerTop}>
-            <div>
-              <p className={styles.kicker}>Dashboard</p>
-              <h1>What to do next</h1>
-              <p>Prioritize follow-ups, track responses, and keep momentum.</p>
-            </div>
-
+            <BrandLogo size="large" href={null} priority />
             <Link href="/applications/new" className={styles.addButton}>
               + Add Application
             </Link>
           </div>
+
+          <h1>Job tracking, simplified.</h1>
+          <p>Stay organized, follow up on time, and move through your job search with confidence.</p>
         </section>
 
         <section className={styles.quickStatsGrid}>
@@ -502,7 +501,7 @@ export default async function DashboardPage() {
 
         <QuickSnapshotCard totalApplications={totalApplications} offers={offers} monthOptions={snapshotMonthOptions} />
 
-        <section className={styles.staleSection}>
+        <section className={`${styles.card} ${styles.staleSection}`}>
           <h2>Stale Applications</h2>
           <p>No updates in 14+ days.</p>
 

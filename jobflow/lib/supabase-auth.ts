@@ -150,6 +150,19 @@ export async function refreshWithToken(refreshToken: string) {
   return resolveAuthResult(first, "Unable to refresh session.");
 }
 
+export async function exchangeRecoveryTokenHash(tokenHash: string) {
+  const path = "/verify";
+  const body = { type: "recovery", token_hash: tokenHash };
+  const first = await postAuthJson(path, body, false);
+
+  if ((first.status === 401 || first.status === 403) && first.ok === false) {
+    const second = await postAuthJson(path, body, true);
+    return resolveAuthResult(second, "Unable to verify recovery token.");
+  }
+
+  return resolveAuthResult(first, "Unable to verify recovery token.");
+}
+
 export async function fetchSupabaseUser(accessToken: string) {
   const response = await fetch(`${getSupabaseAuthBaseUrl()}/user`, {
     method: "GET",
@@ -173,4 +186,45 @@ export async function signOutFromSupabase(accessToken?: string) {
     method: "POST",
     headers: buildHeaders(accessToken),
   });
+}
+
+export async function sendPasswordResetEmail(email: string, redirectTo: string): Promise<string | null> {
+  const body = {
+    email,
+    redirect_to: redirectTo,
+  };
+
+  const first = await postAuthJson("/recover", body, false);
+  const firstPayload = await parsePayload(first);
+
+  if (first.ok) {
+    return null;
+  }
+
+  if (first.status === 401 || first.status === 403) {
+    const second = await postAuthJson("/recover", body, true);
+    const secondPayload = await parsePayload(second);
+    if (second.ok) {
+      return null;
+    }
+
+    return readError(secondPayload, "Unable to send password reset email.");
+  }
+
+  return readError(firstPayload, "Unable to send password reset email.");
+}
+
+export async function updatePasswordWithAccessToken(accessToken: string, password: string): Promise<string | null> {
+  const response = await fetch(`${getSupabaseAuthBaseUrl()}/user`, {
+    method: "PUT",
+    headers: buildHeaders(accessToken),
+    body: JSON.stringify({ password }),
+  });
+
+  if (response.ok) {
+    return null;
+  }
+
+  const payload = await parsePayload(response);
+  return readError(payload, "Unable to update password.");
 }

@@ -44,9 +44,6 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
       <div className={styles.shell}>
         <header className={styles.topBar}>
           <BrandLogo />
-          <Link className={styles.back} href="/login">
-            Log in
-          </Link>
         </header>
 
         <section className={styles.card}>
@@ -57,15 +54,6 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
           </div>
 
           <form className={styles.form} action={signup}>
-            <div className={styles.authTabs} role="tablist" aria-label="Authentication mode">
-              <Link href="/login" className={styles.authTab}>
-                Sign in
-              </Link>
-              <Link href="/signup" className={`${styles.authTab} ${styles.authTabActive}`}>
-                Sign up
-              </Link>
-            </div>
-
             {feedback ? <p className={styles.feedbackError}>{feedback}</p> : null}
 
             <label htmlFor="name">Name</label>
@@ -86,12 +74,9 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
 
             <button type="submit">Create account</button>
 
-            <p className={styles.switchText}>
-              Already have an account?{" "}
-              <Link href="/login" className={styles.switchLink}>
-                Log in
-              </Link>
-            </p>
+            <Link href="/login" className={styles.doorLink}>
+              Already signed up? Go to sign in
+            </Link>
           </form>
         </section>
       </div>
