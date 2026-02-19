@@ -20,6 +20,7 @@ type ApplicationsPageProps = {
     followup?: string;
     created?: string;
     deleted?: string;
+    demo_preview?: string;
   }>;
 };
 
@@ -216,7 +217,8 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
   const stageFilter = String(params.stage ?? "All");
   const statusFilter = String(params.status ?? "All");
   const followUpFilter = String(params.followup ?? "All");
-  const createdMessage = params.created === "1";
+  const demoPreviewMessage = params.demo_preview === "1";
+  const createdMessage = params.created === "1" && !demoPreviewMessage;
   const deletedMessage = params.deleted === "1";
 
   const cookieStore = await cookies();
@@ -343,13 +345,12 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
               <h1>Applications</h1>
               <p>Manage roles, companies, stage, links, and follow-up actions from one list.</p>
             </div>
-            {usingDemoData ? (
-              <span className={styles.demoChip}>Recruiter Demo (read-only)</span>
-            ) : (
+            <div className={styles.headerActions}>
+              {usingDemoData ? <span className={styles.demoChip}>Demo Mode</span> : null}
               <Link href="/applications/new" className={styles.addButton}>
                 + Add Application
               </Link>
-            )}
+            </div>
           </div>
         </section>
 
@@ -410,6 +411,7 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
 
         {createdMessage ? <p className={styles.feedbackInfo}>Application added successfully.</p> : null}
         {deletedMessage ? <p className={styles.feedbackInfo}>Application deleted.</p> : null}
+        {demoPreviewMessage ? <p className={styles.feedbackInfo}>Demo mode preview: form submitted, but nothing was saved.</p> : null}
 
         {rows.length === 0 ? (
           <section className={styles.emptyState}>

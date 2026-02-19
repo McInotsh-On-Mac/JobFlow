@@ -140,7 +140,7 @@ const demoNotes: NoteRecord[] = [
   {
     id: "demo-note-1",
     application_id: "demo-app-2",
-    content: "Recruiter confirmed panel format: API design + behavioral.",
+    content: "Team confirmed panel format: API design + behavioral.",
     created_at: "2026-02-01T11:00:00Z",
   },
   {

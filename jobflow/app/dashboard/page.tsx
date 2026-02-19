@@ -407,13 +407,12 @@ export default async function DashboardPage() {
         <section className={styles.headerCard}>
           <div className={styles.headerTop}>
             <BrandLogo size="large" href={null} priority />
-            {isDemoMode ? (
-              <span className={styles.demoBadge}>Recruiter Demo</span>
-            ) : (
+            <div className={styles.headerActions}>
+              {isDemoMode ? <span className={styles.demoBadge}>Demo Mode</span> : null}
               <Link href="/applications/new" className={styles.addButton}>
                 + Add Application
               </Link>
-            )}
+            </div>
           </div>
 
           <h1>Job tracking, simplified.</h1>

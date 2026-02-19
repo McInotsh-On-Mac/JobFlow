@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import AppHeader from "../../../components/AppHeader";
 import { createApplication } from "../../../lib/application-actions";
+import { DEMO_MODE_COOKIE_NAME } from "../../../lib/auth";
 import styles from "./page.module.css";
 
 type NewApplicationPageProps = {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; demo?: string }>;
 };
 
 function getErrorMessage(error?: string): string | null {
@@ -22,6 +24,8 @@ function getErrorMessage(error?: string): string | null {
 
 export default async function NewApplicationPage({ searchParams }: NewApplicationPageProps) {
   const params = await searchParams;
+  const cookieStore = await cookies();
+  const isDemoMode = cookieStore.get(DEMO_MODE_COOKIE_NAME)?.value === "1" || params.demo === "1";
   const errorMessage = getErrorMessage(params.error);
 
   return (
@@ -39,6 +43,7 @@ export default async function NewApplicationPage({ searchParams }: NewApplicatio
 
           <form className={styles.form} action={createApplication}>
             {errorMessage ? <p className={styles.feedbackError}>{errorMessage}</p> : null}
+            {isDemoMode ? <p className={styles.feedbackInfo}>Demo mode: this form is a live preview and does not save data.</p> : null}
 
             <label htmlFor="company">Company</label>
             <input id="company" name="company" type="text" placeholder="Company name" required />
@@ -65,7 +70,7 @@ export default async function NewApplicationPage({ searchParams }: NewApplicatio
 
             <div className={styles.actions}>
               <button type="submit" className={`${styles.button} ${styles.primary}`}>
-                Save
+                {isDemoMode ? "Preview Save" : "Save"}
               </button>
               <Link href="/applications" className={styles.button}>
                 Cancel

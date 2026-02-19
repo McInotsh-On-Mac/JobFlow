@@ -44,6 +44,12 @@
   gap: 0.8rem;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.48rem;
+}
+
 .headerCard h1 {
   margin: 0;
   font-size: clamp(1.8rem, 4vw, 2.7rem);
@@ -490,6 +496,11 @@
   .headerTop {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .summaryGrid {

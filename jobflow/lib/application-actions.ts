@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ACCESS_TOKEN_COOKIE_NAME, getSupabaseEnv } from "./auth";
+import { ACCESS_TOKEN_COOKIE_NAME, DEMO_MODE_COOKIE_NAME, getSupabaseEnv } from "./auth";
 import { fetchSupabaseUser } from "./supabase-auth";
 
 const ALLOWED_STAGES = new Set(["Applied", "OA", "Interview", "Offer"]);
@@ -156,6 +156,12 @@ export async function createApplication(formData: FormData) {
 
   if (!company || !roleTitle) {
     redirect("/applications/new?error=missing");
+  }
+
+  const cookieStore = await cookies();
+  const isDemoMode = cookieStore.get(DEMO_MODE_COOKIE_NAME)?.value === "1" && !cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
+  if (isDemoMode) {
+    redirect("/applications?demo_preview=1");
   }
 
   const stage = ALLOWED_STAGES.has(stageInput) ? stageInput : "Applied";

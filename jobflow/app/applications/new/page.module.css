@@ -66,6 +66,17 @@
   background: rgba(254, 226, 226, 0.75);
 }
 
+.feedbackInfo {
+  margin: 0 0 0.12rem;
+  border-radius: 0.65rem;
+  padding: 0.5rem 0.62rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  border: 1px solid rgba(3, 105, 161, 0.24);
+  color: #0c4a6e;
+  background: rgba(224, 242, 254, 0.75);
+}
+
 .form label {
   font-size: 0.82rem;
   font-weight: 700;

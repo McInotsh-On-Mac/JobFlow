@@ -44,6 +44,12 @@
   gap: 0.9rem;
 }
 
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 0.48rem;
+}
+
 .headerCard h1 {
   margin: 0.95rem 0 0;
   font-size: clamp(2rem, 5vw, 3.7rem);
@@ -451,6 +457,11 @@
   .headerTop {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .attentionGrid {

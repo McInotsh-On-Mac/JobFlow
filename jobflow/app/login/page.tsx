@@ -84,7 +84,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             </Link>
 
             <button type="submit" formAction={enterDemoMode} formNoValidate className={styles.demoButton}>
-              View Recruiter Demo
+              View Demo
             </button>
 
             <Link href="/signup" className={styles.doorLink}>

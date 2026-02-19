@@ -164,7 +164,7 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
                 Back to applications
               </Link>
               {usingDemoData ? (
-                <span className={styles.demoBadge}>Recruiter Demo (read-only)</span>
+                <span className={styles.demoBadge}>Demo Mode (read-only)</span>
               ) : (
                 <form action={deleteApplication}>
                   <input type="hidden" name="application_id" value={id} />
