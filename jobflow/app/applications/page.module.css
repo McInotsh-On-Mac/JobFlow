@@ -67,6 +67,19 @@
   white-space: nowrap;
 }
 
+.demoChip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(2, 132, 199, 0.24);
+  background: rgba(225, 245, 255, 0.86);
+  color: #0a4e9a;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.36rem 0.68rem;
+}
+
 .summaryGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -377,6 +390,13 @@
   font-size: 0.77rem;
   font-weight: 700;
   cursor: pointer;
+}
+
+.inlineEditForm button:disabled,
+.followUpForm button:disabled,
+.deleteButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .openLink {

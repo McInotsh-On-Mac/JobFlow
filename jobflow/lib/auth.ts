@@ -1,5 +1,6 @@
 export const ACCESS_TOKEN_COOKIE_NAME = "jobflow_access_token";
 export const REFRESH_TOKEN_COOKIE_NAME = "jobflow_refresh_token";
+export const DEMO_MODE_COOKIE_NAME = "jobflow_demo_mode";
 
 export const REFRESH_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 

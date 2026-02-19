@@ -140,9 +140,25 @@
   text-decoration: none;
 }
 
+.demoButton {
+  margin-top: 0.2rem;
+  border: 1px solid rgba(21, 114, 216, 0.24);
+  border-radius: 0.85rem;
+  background: rgba(225, 245, 255, 0.75);
+  color: #0b4f99;
+  font: inherit;
+  font-size: 0.83rem;
+  font-weight: 700;
+  padding: 0.64rem 0.76rem;
+  cursor: pointer;
+}
+
+.demoButton:hover {
+  background: rgba(214, 240, 255, 0.86);
+}
+
 .doorLink {
   margin-top: 0.3rem;
-  text-decoration: none;
   border-radius: 0.95rem;
   border: 1px solid rgba(15, 23, 42, 0.14);
   background:

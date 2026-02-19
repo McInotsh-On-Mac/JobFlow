@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import AppHeader from "../../../components/AppHeader";
-import { ACCESS_TOKEN_COOKIE_NAME } from "../../../lib/auth";
+import { ACCESS_TOKEN_COOKIE_NAME, DEMO_MODE_COOKIE_NAME } from "../../../lib/auth";
 import { addLink, addNote, deleteApplication, markFollowUpDone, setFollowUp, updateApplicationStageStatus } from "../../../lib/application-actions";
+import { getDemoApplicationsPageData, getDemoNotesForApplication } from "../../../lib/demo-data";
 import {
   fetchApplicationById,
   fetchCompanies,
@@ -86,6 +87,7 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
   const { id } = await params;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
+  const isDemoMode = cookieStore.get(DEMO_MODE_COOKIE_NAME)?.value === "1" && !accessToken;
 
   const [application, companies, notes, links, followUps] = accessToken
     ? await Promise.all([
@@ -95,10 +97,21 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
         fetchLinksForApplication(accessToken, id),
         fetchFollowUpsForApplication(accessToken, id),
       ])
+    : isDemoMode
+      ? (() => {
+          const demoData = getDemoApplicationsPageData();
+          const demoApplication = demoData.applications.find((record) => record.id === id) ?? null;
+          const demoNotes = getDemoNotesForApplication(id);
+          const demoLinks = demoData.links.filter((record) => record.application_id === id);
+          const demoFollowUps = demoData.openFollowUps.filter((record) => record.application_id === id);
+          return [demoApplication, demoData.companies, demoNotes, demoLinks, demoFollowUps];
+        })()
     : [null, [], [], [], []];
+  const usingDemoData = isDemoMode;
 
   const activeApplication = application;
   const activeCompanies = companies;
+  const activeNotes = notes;
   const activeLinks = links;
   const activeFollowUps = followUps;
 
@@ -150,13 +163,17 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
               <Link href="/applications" className={styles.backLink}>
                 Back to applications
               </Link>
-              <form action={deleteApplication}>
-                <input type="hidden" name="application_id" value={id} />
-                <input type="hidden" name="return_to" value="/applications?deleted=1" />
-                <button type="submit" className={styles.deleteButton}>
-                  Delete
-                </button>
-              </form>
+              {usingDemoData ? (
+                <span className={styles.demoBadge}>Recruiter Demo (read-only)</span>
+              ) : (
+                <form action={deleteApplication}>
+                  <input type="hidden" name="application_id" value={id} />
+                  <input type="hidden" name="return_to" value="/applications?deleted=1" />
+                  <button type="submit" className={styles.deleteButton}>
+                    Delete
+                  </button>
+                </form>
+              )}
             </div>
           </div>
 
@@ -165,7 +182,7 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
             <input type="hidden" name="return_to" value={returnTo} />
 
             <label htmlFor="stage">Stage</label>
-            <select id="stage" name="stage" defaultValue={activeApplication.stage ?? "Applied"}>
+            <select id="stage" name="stage" defaultValue={activeApplication.stage ?? "Applied"} disabled={usingDemoData}>
               <option value="Applied">Applied</option>
               <option value="OA">OA</option>
               <option value="Interview">Interview</option>
@@ -173,14 +190,14 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
             </select>
 
             <label htmlFor="status">Status</label>
-            <select id="status" name="status" defaultValue={activeApplication.status ?? "Active"}>
+            <select id="status" name="status" defaultValue={activeApplication.status ?? "Active"} disabled={usingDemoData}>
               <option value="Active">Active</option>
               <option value="Rejected">Rejected</option>
               <option value="Accepted">Accepted</option>
               <option value="Withdrawn">Withdrawn</option>
             </select>
 
-            <button type="submit">
+            <button type="submit" disabled={usingDemoData}>
               Save
             </button>
           </form>
@@ -195,20 +212,24 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
                 : "No follow-up scheduled yet."}
             </p>
 
-            <form className={styles.stackedForm} action={setFollowUp}>
-              <input type="hidden" name="application_id" value={id} />
-              <input type="hidden" name="return_to" value={returnTo} />
+            {usingDemoData ? (
+              <p className={styles.demoNotice}>Demo mode is read-only. Sign in to add or update follow-ups.</p>
+            ) : (
+              <form className={styles.stackedForm} action={setFollowUp}>
+                <input type="hidden" name="application_id" value={id} />
+                <input type="hidden" name="return_to" value={returnTo} />
 
-              <label htmlFor="due_date">Set follow-up date</label>
-              <input id="due_date" name="due_date" type="date" defaultValue={defaultFollowUpDate} required />
+                <label htmlFor="due_date">Set follow-up date</label>
+                <input id="due_date" name="due_date" type="date" defaultValue={defaultFollowUpDate} required />
 
-              <label htmlFor="note">Note (optional)</label>
-              <input id="note" name="note" type="text" placeholder="What to follow up on..." />
+                <label htmlFor="note">Note (optional)</label>
+                <input id="note" name="note" type="text" placeholder="What to follow up on..." />
 
-              <button type="submit">
-                Set follow-up
-              </button>
-            </form>
+                <button type="submit">
+                  Set follow-up
+                </button>
+              </form>
+            )}
 
             {openFollowUps.length > 0 ? (
               <ul className={styles.followUpList}>
@@ -219,12 +240,16 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
                       <span>{followUp.note?.trim() || "No note"}</span>
                     </div>
 
-                    <form action={markFollowUpDone}>
-                      <input type="hidden" name="follow_up_id" value={followUp.id} />
-                      <input type="hidden" name="application_id" value={id} />
-                      <input type="hidden" name="return_to" value={returnTo} />
-                      <button type="submit">Mark done</button>
-                    </form>
+                    {usingDemoData ? (
+                      <span className={styles.readOnlyTag}>Read-only</span>
+                    ) : (
+                      <form action={markFollowUpDone}>
+                        <input type="hidden" name="follow_up_id" value={followUp.id} />
+                        <input type="hidden" name="application_id" value={id} />
+                        <input type="hidden" name="return_to" value={returnTo} />
+                        <button type="submit">Mark done</button>
+                      </form>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -233,23 +258,33 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
 
           <article className={styles.card}>
             <h2>Notes</h2>
-            <form className={styles.stackedForm} action={addNote}>
-              <input type="hidden" name="application_id" value={id} />
-              <input type="hidden" name="return_to" value={returnTo} />
+            {usingDemoData ? (
+              <p className={styles.demoNotice}>Demo mode is read-only. Sign in to add notes.</p>
+            ) : (
+              <form className={styles.stackedForm} action={addNote}>
+                <input type="hidden" name="application_id" value={id} />
+                <input type="hidden" name="return_to" value={returnTo} />
 
-              <label htmlFor="content">Add note</label>
-              <textarea id="content" name="content" rows={4} placeholder="Interview notes, reminders, contact context..." required />
+                <label htmlFor="content">Add note</label>
+                <textarea
+                  id="content"
+                  name="content"
+                  rows={4}
+                  placeholder="Interview notes, reminders, contact context..."
+                  required
+                />
 
-              <button type="submit">
-                Add note
-              </button>
-            </form>
+                <button type="submit">
+                  Add note
+                </button>
+              </form>
+            )}
 
-            {notes.length === 0 ? <p className={styles.emptyText}>No notes yet.</p> : null}
+            {activeNotes.length === 0 ? <p className={styles.emptyText}>No notes yet.</p> : null}
 
-            {notes.length > 0 ? (
+            {activeNotes.length > 0 ? (
               <ul className={styles.noteList}>
-                {notes.map((note) => (
+                {activeNotes.map((note) => (
                   <li key={note.id}>
                     <p>{note.content?.trim() || "Empty note"}</p>
                     <span>{formatDateLabel(note.created_at)}</span>
@@ -262,20 +297,24 @@ export default async function ApplicationDetailPage({ params }: ApplicationDetai
 
         <section className={styles.card}>
           <h2>Links</h2>
-          <form className={styles.linkForm} action={addLink}>
-            <input type="hidden" name="application_id" value={id} />
-            <input type="hidden" name="return_to" value={returnTo} />
+          {usingDemoData ? (
+            <p className={styles.demoNotice}>Demo mode is read-only. Sign in to add links.</p>
+          ) : (
+            <form className={styles.linkForm} action={addLink}>
+              <input type="hidden" name="application_id" value={id} />
+              <input type="hidden" name="return_to" value={returnTo} />
 
-            <label htmlFor="label">Label</label>
-            <input id="label" name="label" type="text" placeholder="Job posting, OA link..." />
+              <label htmlFor="label">Label</label>
+              <input id="label" name="label" type="text" placeholder="Job posting, OA link..." />
 
-            <label htmlFor="url">URL</label>
-            <input id="url" name="url" type="url" placeholder="https://..." required />
+              <label htmlFor="url">URL</label>
+              <input id="url" name="url" type="url" placeholder="https://..." required />
 
-            <button type="submit">
-              Add link
-            </button>
-          </form>
+              <button type="submit">
+                Add link
+              </button>
+            </form>
+          )}
 
           {activeLinks.length === 0 ? <p className={styles.emptyText}>No links yet.</p> : null}
 

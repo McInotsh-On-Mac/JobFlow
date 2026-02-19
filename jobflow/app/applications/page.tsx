@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import AppHeader from "../../components/AppHeader";
-import { ACCESS_TOKEN_COOKIE_NAME } from "../../lib/auth";
+import { ACCESS_TOKEN_COOKIE_NAME, DEMO_MODE_COOKIE_NAME } from "../../lib/auth";
 import { deleteApplication, setFollowUp, updateApplicationStageStatus } from "../../lib/application-actions";
+import { getDemoApplicationsPageData } from "../../lib/demo-data";
 import {
   fetchApplicationsPageData,
   type ApplicationDetailRecord,
@@ -220,9 +221,13 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
 
   const cookieStore = await cookies();
   const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
+  const isDemoMode = cookieStore.get(DEMO_MODE_COOKIE_NAME)?.value === "1" && !accessToken;
   const { applications, companies, links, openFollowUps } = accessToken
     ? await fetchApplicationsPageData(accessToken)
-    : { applications: [], companies: [], links: [], openFollowUps: [] };
+    : isDemoMode
+      ? getDemoApplicationsPageData()
+      : { applications: [], companies: [], links: [], openFollowUps: [] };
+  const usingDemoData = isDemoMode;
 
   const companyById = new Map<string, string>();
   companies.forEach((company) => {
@@ -338,9 +343,13 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
               <h1>Applications</h1>
               <p>Manage roles, companies, stage, links, and follow-up actions from one list.</p>
             </div>
-            <Link href="/applications/new" className={styles.addButton}>
-              + Add Application
-            </Link>
+            {usingDemoData ? (
+              <span className={styles.demoChip}>Recruiter Demo (read-only)</span>
+            ) : (
+              <Link href="/applications/new" className={styles.addButton}>
+                + Add Application
+              </Link>
+            )}
           </div>
         </section>
 
@@ -455,7 +464,7 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
                     <input type="hidden" name="application_id" value={row.id} />
                     <input type="hidden" name="return_to" value={returnTo} />
                     <label htmlFor={`stage-${row.id}`}>Stage</label>
-                    <select id={`stage-${row.id}`} name="stage" defaultValue={row.stage}>
+                    <select id={`stage-${row.id}`} name="stage" defaultValue={row.stage} disabled={usingDemoData}>
                       <option value="Applied">Applied</option>
                       <option value="OA">OA</option>
                       <option value="Interview">Interview</option>
@@ -463,14 +472,14 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
                     </select>
 
                     <label htmlFor={`status-${row.id}`}>Status</label>
-                    <select id={`status-${row.id}`} name="status" defaultValue={row.status}>
+                    <select id={`status-${row.id}`} name="status" defaultValue={row.status} disabled={usingDemoData}>
                       <option value="Active">Active</option>
                       <option value="Rejected">Rejected</option>
                       <option value="Accepted">Accepted</option>
                       <option value="Withdrawn">Withdrawn</option>
                     </select>
 
-                    <button type="submit">
+                    <button type="submit" disabled={usingDemoData}>
                       Save
                     </button>
                   </form>
@@ -479,8 +488,15 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
                     <input type="hidden" name="application_id" value={row.id} />
                     <input type="hidden" name="return_to" value={returnTo} />
                     <label htmlFor={`due-${row.id}`}>Set follow-up</label>
-                    <input id={`due-${row.id}`} name="due_date" type="date" defaultValue={row.defaultFollowUpDate} required />
-                    <button type="submit">
+                    <input
+                      id={`due-${row.id}`}
+                      name="due_date"
+                      type="date"
+                      defaultValue={row.defaultFollowUpDate}
+                      disabled={usingDemoData}
+                      required
+                    />
+                    <button type="submit" disabled={usingDemoData}>
                       Set
                     </button>
                   </form>
@@ -492,7 +508,7 @@ export default async function ApplicationsPage({ searchParams }: ApplicationsPag
                   <form className={styles.deleteForm} action={deleteApplication}>
                     <input type="hidden" name="application_id" value={row.id} />
                     <input type="hidden" name="return_to" value={deleteReturnTo} />
-                    <button type="submit" className={styles.deleteButton}>
+                    <button type="submit" className={styles.deleteButton} disabled={usingDemoData}>
                       Delete
                     </button>
                   </form>

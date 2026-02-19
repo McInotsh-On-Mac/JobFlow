@@ -70,6 +70,19 @@
   white-space: nowrap;
 }
 
+.demoBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  border: 1px solid rgba(2, 132, 199, 0.24);
+  background: rgba(225, 245, 255, 0.86);
+  color: #0a4e9a;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.36rem 0.68rem;
+}
+
 .quickStatsGrid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -212,6 +225,17 @@
 .itemActions button,
 .staleAction button {
   cursor: pointer;
+}
+
+.demoSmall {
+  text-decoration: none;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: #ffffff;
+  color: #54657f;
+  border-radius: 0.62rem;
+  padding: 0.34rem 0.52rem;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .metricsCard {

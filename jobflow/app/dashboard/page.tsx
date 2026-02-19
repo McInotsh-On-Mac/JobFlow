@@ -2,8 +2,9 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import AppHeader from "../../components/AppHeader";
 import BrandLogo from "../../components/BrandLogo";
-import { ACCESS_TOKEN_COOKIE_NAME } from "../../lib/auth";
+import { ACCESS_TOKEN_COOKIE_NAME, DEMO_MODE_COOKIE_NAME } from "../../lib/auth";
 import { markFollowUpDone, setFollowUp } from "../../lib/application-actions";
+import { getDemoApplicationsPageData } from "../../lib/demo-data";
 import { fetchApplicationsPageData, type ApplicationDetailRecord, type ApplicationRecord } from "../../lib/supabase-data";
 import DashboardActivityChart, { type ChartPoint } from "./DashboardActivityChart";
 import QuickSnapshotCard, { type SnapshotMonthOption } from "./QuickSnapshotCard";
@@ -244,9 +245,12 @@ function buildMedian(values: number[]): number | null {
 export default async function DashboardPage() {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
+  const isDemoMode = cookieStore.get(DEMO_MODE_COOKIE_NAME)?.value === "1" && !accessToken;
   const { applications, companies, openFollowUps } = accessToken
     ? await fetchApplicationsPageData(accessToken)
-    : { applications: [], companies: [], openFollowUps: [] };
+    : isDemoMode
+      ? getDemoApplicationsPageData()
+      : { applications: [], companies: [], openFollowUps: [] };
 
   const chartRecords: ApplicationRecord[] = applications.map((application) => ({
     id: application.id,
@@ -403,9 +407,13 @@ export default async function DashboardPage() {
         <section className={styles.headerCard}>
           <div className={styles.headerTop}>
             <BrandLogo size="large" href={null} priority />
-            <Link href="/applications/new" className={styles.addButton}>
-              + Add Application
-            </Link>
+            {isDemoMode ? (
+              <span className={styles.demoBadge}>Recruiter Demo</span>
+            ) : (
+              <Link href="/applications/new" className={styles.addButton}>
+                + Add Application
+              </Link>
+            )}
           </div>
 
           <h1>Job tracking, simplified.</h1>
@@ -456,12 +464,16 @@ export default async function DashboardPage() {
 
                       <div className={styles.itemActions}>
                         <Link href={`/applications/${item.applicationId}`}>Open</Link>
-                        <form action={markFollowUpDone}>
-                          <input type="hidden" name="follow_up_id" value={item.followUpId} />
-                          <input type="hidden" name="application_id" value={item.applicationId} />
-                          <input type="hidden" name="return_to" value="/dashboard" />
-                          <button type="submit">Mark Done</button>
-                        </form>
+                        {isDemoMode ? (
+                          <span className={styles.demoSmall}>Read-only</span>
+                        ) : (
+                          <form action={markFollowUpDone}>
+                            <input type="hidden" name="follow_up_id" value={item.followUpId} />
+                            <input type="hidden" name="application_id" value={item.applicationId} />
+                            <input type="hidden" name="return_to" value="/dashboard" />
+                            <button type="submit">Mark Done</button>
+                          </form>
+                        )}
                       </div>
                     </li>
                   ))}
@@ -518,13 +530,17 @@ export default async function DashboardPage() {
                     </span>
                   </div>
 
-                  <form action={setFollowUp} className={styles.staleAction}>
-                    <input type="hidden" name="application_id" value={item.applicationId} />
-                    <input type="hidden" name="return_to" value="/dashboard" />
-                    <input type="hidden" name="due_date" value={item.suggestedDate} />
-                    <input type="hidden" name="note" value="Follow up from dashboard stale list" />
-                    <button type="submit">Set follow-up</button>
-                  </form>
+                  {isDemoMode ? (
+                    <span className={styles.demoSmall}>Read-only</span>
+                  ) : (
+                    <form action={setFollowUp} className={styles.staleAction}>
+                      <input type="hidden" name="application_id" value={item.applicationId} />
+                      <input type="hidden" name="return_to" value="/dashboard" />
+                      <input type="hidden" name="due_date" value={item.suggestedDate} />
+                      <input type="hidden" name="note" value="Follow up from dashboard stale list" />
+                      <button type="submit">Set follow-up</button>
+                    </form>
+                  )}
                 </li>
               ))}
             </ul>

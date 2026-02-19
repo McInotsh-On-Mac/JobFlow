@@ -1,6 +1,6 @@
 import Link from "next/link";
 import BrandLogo from "../../components/BrandLogo";
-import { login } from "../../lib/auth-actions";
+import { enterDemoMode, login } from "../../lib/auth-actions";
 import RecoveryRedirect from "./RecoveryRedirect";
 import styles from "./page.module.css";
 
@@ -82,6 +82,10 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
             <Link className={styles.forgotLink} href="/forgot-password">
               Forgot password?
             </Link>
+
+            <button type="submit" formAction={enterDemoMode} formNoValidate className={styles.demoButton}>
+              View Recruiter Demo
+            </button>
 
             <Link href="/signup" className={styles.doorLink}>
               New here? Create your account

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   ACCESS_TOKEN_COOKIE_NAME,
+  DEMO_MODE_COOKIE_NAME,
   REFRESH_COOKIE_MAX_AGE_SECONDS,
   REFRESH_TOKEN_COOKIE_NAME,
 } from "./lib/auth";
@@ -45,6 +46,7 @@ export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
   let accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE_NAME)?.value;
   const refreshToken = request.cookies.get(REFRESH_TOKEN_COOKIE_NAME)?.value;
+  const isDemoMode = request.cookies.get(DEMO_MODE_COOKIE_NAME)?.value === "1";
   let isAuthenticated = false;
 
   if (accessToken) {
@@ -65,14 +67,16 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  if (!isAuthenticated && !isPublicRoute) {
+  if (!isAuthenticated && !isDemoMode && !isPublicRoute) {
     const redirectResponse = NextResponse.redirect(new URL("/login", request.url));
     clearProxySessionCookies(redirectResponse);
+    redirectResponse.cookies.set(DEMO_MODE_COOKIE_NAME, "", { path: "/", maxAge: 0 });
     return redirectResponse;
   }
 
   if (pathname === "/login") {
     clearProxySessionCookies(response);
+    response.cookies.set(DEMO_MODE_COOKIE_NAME, "", { path: "/", maxAge: 0 });
   }
 
   return response;

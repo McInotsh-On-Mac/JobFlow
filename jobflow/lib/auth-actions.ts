@@ -4,6 +4,7 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import {
   ACCESS_TOKEN_COOKIE_NAME,
+  DEMO_MODE_COOKIE_NAME,
   REFRESH_COOKIE_MAX_AGE_SECONDS,
   REFRESH_TOKEN_COOKIE_NAME,
 } from "./auth";
@@ -47,6 +48,13 @@ async function setSessionCookies(session: SupabaseSession) {
     secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: REFRESH_COOKIE_MAX_AGE_SECONDS,
+  });
+
+  cookieStore.set({
+    name: DEMO_MODE_COOKIE_NAME,
+    value: "",
+    path: "/",
+    maxAge: 0,
   });
 }
 
@@ -138,6 +146,34 @@ export async function signup(formData: FormData) {
   redirect("/dashboard");
 }
 
+export async function enterDemoMode() {
+  const cookieStore = await cookies();
+
+  cookieStore.set({
+    name: ACCESS_TOKEN_COOKIE_NAME,
+    value: "",
+    path: "/",
+    maxAge: 0,
+  });
+  cookieStore.set({
+    name: REFRESH_TOKEN_COOKIE_NAME,
+    value: "",
+    path: "/",
+    maxAge: 0,
+  });
+
+  cookieStore.set({
+    name: DEMO_MODE_COOKIE_NAME,
+    value: "1",
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+  });
+
+  redirect("/dashboard");
+}
+
 export async function requestPasswordReset(formData: FormData) {
   const email = String(formData.get("email") ?? "").trim();
 
@@ -224,6 +260,12 @@ export async function resetPassword(formData: FormData) {
     path: "/",
     maxAge: 0,
   });
+  cookieStore.set({
+    name: DEMO_MODE_COOKIE_NAME,
+    value: "",
+    path: "/",
+    maxAge: 0,
+  });
 
   redirect("/login?message=password-reset");
 }
@@ -243,6 +285,12 @@ export async function logout() {
 
   cookieStore.set({
     name: REFRESH_TOKEN_COOKIE_NAME,
+    value: "",
+    path: "/",
+    maxAge: 0,
+  });
+  cookieStore.set({
+    name: DEMO_MODE_COOKIE_NAME,
     value: "",
     path: "/",
     maxAge: 0,
