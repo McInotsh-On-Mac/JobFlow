@@ -92,8 +92,9 @@ export async function login(formData: FormData) {
     const result = await signInWithPassword(email, password);
     error = result.error;
     session = result.session;
-  } catch {
-    redirectWithReason("/login", "network");
+  } catch (cause) {
+    const reason = cause instanceof Error ? cause.message : "Unexpected auth error";
+    redirectWithReason("/login", "network", reason);
   }
 
   if (error || !session) {
