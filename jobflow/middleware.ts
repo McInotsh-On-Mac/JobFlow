@@ -35,7 +35,7 @@ function clearProxySessionCookies(response: NextResponse) {
   response.cookies.set(REFRESH_TOKEN_COOKIE_NAME, "", { path: "/", maxAge: 0 });
 }
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isPublicRoute = PUBLIC_ROUTES.has(pathname);
 
