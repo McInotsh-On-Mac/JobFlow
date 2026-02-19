@@ -1,7 +1,7 @@
 import Link from "next/link";
 import BrandLogo from "../../components/BrandLogo";
+import RecoveryRedirect from "../../components/RecoveryRedirect";
 import { enterDemoMode, login } from "../../lib/auth-actions";
-import RecoveryRedirect from "./RecoveryRedirect";
 import styles from "./page.module.css";
 
 type LoginPageProps = {
