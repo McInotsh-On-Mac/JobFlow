@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { cookies } from "next/headers";
 import AppHeader from "../../components/AppHeader";
-import BrandLogo from "../../components/BrandLogo";
 import { ACCESS_TOKEN_COOKIE_NAME, DEMO_MODE_COOKIE_NAME } from "../../lib/auth";
 import { markFollowUpDone, setFollowUp } from "../../lib/application-actions";
 import { getDemoApplicationsPageData } from "../../lib/demo-data";
@@ -405,14 +404,11 @@ export default async function DashboardPage() {
         <AppHeader current="dashboard" />
 
         <section className={styles.headerCard}>
-          <div className={styles.headerTop}>
-            <BrandLogo size="large" href={null} priority />
-            <div className={styles.headerActions}>
-              {isDemoMode ? <span className={styles.demoBadge}>Demo Mode</span> : null}
-              <Link href="/applications/new" className={styles.addButton}>
-                + Add Application
-              </Link>
-            </div>
+          <div className={styles.headerActions}>
+            {isDemoMode ? <span className={styles.demoBadge}>Demo Mode</span> : null}
+            <Link href="/applications/new" className={styles.addButton}>
+              + Add Application
+            </Link>
           </div>
 
           <h1>Job tracking, simplified.</h1>

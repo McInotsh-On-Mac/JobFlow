@@ -15,7 +15,7 @@ const links = [
 export default function AppHeader({ current }: AppHeaderProps) {
   return (
     <header className={styles.topBar}>
-      <BrandLogo />
+      <BrandLogo size="medium" />
 
       <div className={styles.right}>
         <nav className={styles.nav} aria-label="Primary">
