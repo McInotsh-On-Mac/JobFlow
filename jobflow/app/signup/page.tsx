@@ -42,13 +42,9 @@ export default async function SignupPage({ searchParams }: SignupPageProps) {
       <div className={styles.halo} aria-hidden />
 
       <div className={styles.shell}>
-        <header className={styles.topBar}>
-          <BrandLogo />
-        </header>
-
         <section className={styles.card}>
           <div className={styles.brandBlock}>
-            <BrandLogo size="large" href={null} priority />
+            <BrandLogo size="large" href={null} priority asset="video" />
             <h1>Create your account</h1>
             <p>Start with a clean, focused workspace.</p>
           </div>

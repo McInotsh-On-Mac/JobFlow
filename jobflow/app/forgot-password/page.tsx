@@ -45,13 +45,9 @@ export default async function ForgotPasswordPage({ searchParams }: ForgotPasswor
       <div className={styles.halo} aria-hidden />
 
       <div className={styles.shell}>
-        <header className={styles.topBar}>
-          <BrandLogo />
-        </header>
-
         <section className={styles.card}>
           <div className={styles.brandBlock}>
-            <BrandLogo size="large" href={null} priority />
+            <BrandLogo size="large" href={null} priority asset="video" />
             <h1>Reset your password</h1>
             <p>Enter your email and we will send you a secure reset link.</p>
           </div>

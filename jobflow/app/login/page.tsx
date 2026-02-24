@@ -50,9 +50,9 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <div className={styles.shell}>
         <section className={styles.card}>
           <div className={styles.brandBlock}>
-            <BrandLogo size="large" href={null} priority />
-            <h1>Welcome back</h1>
-            <p>Sign in to access your account.</p>
+            <BrandLogo size="large" href={null} priority asset="video" />
+            <h1>Sign in</h1>
+            <p>Continue in your clean, focused workspace.</p>
           </div>
 
           <form className={styles.form} action={login}>

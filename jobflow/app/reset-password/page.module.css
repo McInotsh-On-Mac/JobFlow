@@ -1,74 +1,62 @@
 .page {
   min-height: 100dvh;
-  padding: clamp(1rem, 2.4vw, 2.2rem);
-  background:
-    radial-gradient(circle at 12% 18%, rgba(10, 86, 214, 0.2), transparent 35%),
-    radial-gradient(circle at 86% 10%, rgba(38, 212, 222, 0.22), transparent 38%),
-    linear-gradient(140deg, #edf3fc 0%, #e9f2fc 50%, #f5f9ff 100%);
+  padding: clamp(1.2rem, 2.6vw, 2.6rem);
+  background: #ffffff;
   position: relative;
   overflow: hidden;
 }
 
 .halo {
   position: absolute;
-  width: min(40rem, 62vw);
-  aspect-ratio: 1;
-  left: 50%;
-  top: 22%;
-  transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(17, 108, 240, 0.16) 0%, rgba(17, 108, 240, 0) 72%);
+  inset: 0;
   pointer-events: none;
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 84px 84px;
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0) 72%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.28) 0%, rgba(0, 0, 0, 0) 72%);
 }
 
 .shell {
   position: relative;
   z-index: 1;
-  max-width: 960px;
+  max-width: 1020px;
   margin: 0 auto;
   display: grid;
-  gap: 1rem;
-}
-
-.topBar {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 0.8rem;
-  padding: 0.7rem 0.9rem;
-  border-radius: 999px;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: blur(7px);
+  gap: 0.72rem;
 }
 
 .card {
-  border-radius: 1.5rem;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  background: rgba(255, 255, 255, 0.9);
-  padding: clamp(1.05rem, 3vw, 2.3rem);
-  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.1);
+  border-radius: 3px;
+  border: 1px solid #000000;
+  background: #ffffff;
+  padding: clamp(1.15rem, 3vw, 2.35rem);
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .brandBlock {
   display: grid;
   align-content: center;
-  gap: 0.75rem;
+  gap: 0.72rem;
 }
 
 .brandBlock h1 {
   margin: 0;
-  font-size: clamp(1.8rem, 3.7vw, 2.8rem);
-  line-height: 1.02;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.9rem, 4vw, 3.15rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
 }
 
 .brandBlock p {
   margin: 0;
-  color: #41526c;
-  line-height: 1.45;
+  max-width: 32ch;
+  color: #555d66;
+  line-height: 1.46;
 }
 
 .form {
@@ -78,47 +66,65 @@
 }
 
 .feedbackError {
-  margin: 0 0 0.12rem;
-  border-radius: 0.65rem;
+  margin: 0 0 0.14rem;
+  border-radius: 2px;
+  border: 1px solid #9f2f2f;
+  background: #fff4f4;
+  color: #7a2323;
   padding: 0.5rem 0.62rem;
   font-size: 0.8rem;
-  line-height: 1.35;
-  border: 1px solid rgba(184, 28, 28, 0.24);
-  color: #7f1d1d;
-  background: rgba(254, 226, 226, 0.75);
+  line-height: 1.36;
 }
 
 .form label {
-  font-size: 0.82rem;
+  font-size: 0.74rem;
   font-weight: 700;
-  color: #213249;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #000000;
 }
 
 .form input {
   width: 100%;
-  border: 1px solid rgba(15, 23, 42, 0.16);
-  border-radius: 0.85rem;
+  border: 1px solid #000000;
+  border-radius: 2px;
   background: #ffffff;
-  color: #0f172a;
-  padding: 0.72rem 0.78rem;
+  color: #000000;
+  padding: 0.7rem 0.76rem;
   font: inherit;
 }
 
 .form input:focus {
-  outline: 2px solid rgba(23, 114, 216, 0.28);
-  outline-offset: 1px;
+  outline: 2px solid #5f6e7f;
+  outline-offset: 2px;
 }
 
 .form button {
-  margin-top: 0.32rem;
-  border: none;
-  border-radius: 0.9rem;
-  background: linear-gradient(90deg, #0a56d6 0%, #1e8dee 55%, #20c5d8 100%);
-  color: #f8fbff;
+  margin-top: 0.34rem;
+  border: 1px solid #000000;
+  border-radius: 2px;
+  background: #000000;
+  color: #ffffff;
   font: inherit;
+  font-size: 0.78rem;
   font-weight: 700;
-  padding: 0.74rem 0.88rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.72rem 0.84rem;
   cursor: pointer;
+  transition: color 130ms ease, background-color 130ms ease, box-shadow 130ms ease, transform 130ms ease;
+}
+
+.form button:hover {
+  color: #000000;
+  background: #ffffff;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000000;
+}
+
+.form button:focus-visible {
+  outline: 2px solid #5f6e7f;
+  outline-offset: 2px;
 }
 
 .form button:disabled {
@@ -127,40 +133,53 @@
 }
 
 .doorLink {
-  margin-top: 0.3rem;
+  margin-top: 0.34rem;
   text-decoration: none;
-  border-radius: 0.95rem;
-  border: 1px solid rgba(15, 23, 42, 0.14);
-  background:
-    linear-gradient(140deg, rgba(247, 251, 255, 0.95), rgba(235, 246, 255, 0.95));
-  color: #14355f;
-  font-size: 0.84rem;
+  border-radius: 2px;
+  border: 1px solid #000000;
+  background: #ffffff;
+  color: #000000;
+  font-size: 0.76rem;
   font-weight: 700;
-  padding: 0.74rem 0.86rem;
-  transition: transform 120ms ease, box-shadow 120ms ease;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.72rem 0.84rem;
+  transition: color 130ms ease, background-color 130ms ease, box-shadow 130ms ease, transform 130ms ease;
 }
 
 .doorLink:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  color: #ffffff;
+  background: #000000;
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #000000;
+}
+
+.doorLink:focus-visible {
+  outline: 2px solid #5f6e7f;
+  outline-offset: 2px;
 }
 
 .helperLink {
   justify-self: center;
   text-decoration: none;
-  color: #0b5de0;
-  font-size: 0.84rem;
+  color: #4d5b68;
+  font-size: 0.74rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.helperLink:hover {
+  color: #000000;
+}
+
+.helperLink:focus-visible {
+  outline: 2px solid #5f6e7f;
+  outline-offset: 2px;
 }
 
 @media (max-width: 840px) {
   .card {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 720px) {
-  .topBar {
-    border-radius: 1rem;
   }
 }

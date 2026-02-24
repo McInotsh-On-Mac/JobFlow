@@ -1,63 +1,91 @@
 .chart {
+  --n90-cyan: #00d5ff;
+  --n90-blue: #3d5afe;
+  --n90-magenta: #ff4fd8;
+  --n90-violet: #7b5cff;
   display: grid;
-  gap: 0.72rem;
+  gap: 0.9rem;
 }
 
 .tabs {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  border: 1px solid rgba(15, 23, 42, 0.12);
-  border-radius: 999px;
-  padding: 0.24rem;
-  background: rgba(255, 255, 255, 0.88);
+  gap: 0.3rem;
+  border: 1px solid #2f3faf;
+  border-radius: 2px;
+  padding: 0.2rem;
+  background: #ffffff;
 }
 
 .tab {
-  border: 0;
-  background: transparent;
-  color: #41526c;
+  border: 1px solid #2f3faf;
+  background: linear-gradient(180deg, #f3f1ff, #ffffff);
+  color: #172038;
   font: inherit;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  border-radius: 999px;
-  padding: 0.35rem 0.62rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  padding: 0.32rem 0.58rem;
   cursor: pointer;
+  transition: color 130ms ease, background-color 130ms ease, box-shadow 130ms ease, transform 130ms ease;
+}
+
+.tab:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 #000000;
+}
+
+.tab:focus-visible {
+  outline: 2px solid #5f6e7f;
+  outline-offset: 2px;
 }
 
 .active {
-  background: #0f172a;
-  color: #f8fbff;
+  border-color: #9f3aa3;
+  background: linear-gradient(90deg, var(--n90-magenta), #ffa7ef);
+  color: #2f1030;
 }
 
 .grid {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: minmax(2.6rem, 1fr);
-  gap: 0.45rem;
+  grid-auto-columns: minmax(2.8rem, 1fr);
+  gap: 0.42rem;
   overflow-x: auto;
   padding-bottom: 0.2rem;
 }
 
 .item {
   display: grid;
-  gap: 0.34rem;
+  gap: 0.35rem;
   justify-items: center;
-  min-width: 2.6rem;
+  min-width: 2.8rem;
 }
 
 .value {
   margin: 0;
-  font-size: 0.72rem;
-  color: #51617a;
+  font-size: 0.7rem;
+  color: #353a40;
+  font-weight: 600;
 }
 
 .track {
   width: 100%;
-  height: 7.5rem;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.08);
-  border: 1px solid rgba(15, 23, 42, 0.1);
+  height: 7.8rem;
+  border-radius: 2px;
+  border: 1px solid #000000;
+  background:
+    linear-gradient(180deg, #ffffff, #ffffff),
+    repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.04),
+      rgba(0, 0, 0, 0.04) 1px,
+      transparent 1px,
+      transparent 8px
+    );
+  background-blend-mode: normal;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
@@ -65,15 +93,16 @@
 
 .fill {
   width: 100%;
-  background: linear-gradient(180deg, #1ba0f0 0%, #0a56d6 100%);
-  border-radius: 999px;
+  background: linear-gradient(180deg, var(--n90-cyan), var(--n90-violet));
+  border-radius: 0;
   min-height: 3px;
 }
 
 .label {
   margin: 0;
-  color: #5e6d84;
-  font-size: 0.7rem;
+  color: #525860;
+  font-size: 0.66rem;
+  font-weight: 500;
   text-align: center;
   white-space: nowrap;
 }
