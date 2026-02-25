@@ -7,7 +7,10 @@
   --n90-violet: #7b5cff;
   min-height: 100dvh;
   padding: clamp(1.2rem, 2.5vw, 2.8rem);
-  background: #ffffff;
+  background:
+    radial-gradient(circle at 10% 12%, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0) 34%),
+    radial-gradient(circle at 88% 8%, rgba(196, 147, 255, 0.42) 0%, rgba(196, 147, 255, 0) 40%),
+    linear-gradient(140deg, #fbf4ff 0%, #f2ddff 38%, #e3c4ff 70%, #d9b6ff 100%);
   position: relative;
   overflow: hidden;
 }
@@ -17,9 +20,10 @@
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-  background-size: 88px 88px;
+    linear-gradient(rgba(92, 67, 147, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(92, 67, 147, 0.16) 1px, transparent 1px);
+  background-size: 82px 82px;
+  opacity: 0.8;
   -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 72%);
   mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0) 72%);
 }
